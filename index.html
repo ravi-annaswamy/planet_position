@@ -29,13 +29,22 @@
 <script>
     var westernZodiac = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
     var indianZodiac = ['Mesha', 'Vrishabha', 'Mithuna', 'Karka', 'Simha', 'Kanya', 'Tula', 'Vrischika', 'Dhanu', 'Makara', 'Kumbha', 'Meena'];
-
+    var indianZodiacTamil = ['மேஷம் ', 'ரிஷபம்', 'மிதுனம்', 'கடகம்', 'சிம்மம்', 'கன்னி', 'துலாம்', 'விருச்சிகம்', 'தனுசு', 'மகரம்', 'கும்பம்', 'மீனம்'];
+	
     var nakshatraNames = [
         "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra", "Punarvasu", "Pushya", "Ashlesha",
         "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", 
         "Jyeshta", "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha", 
         "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
     ];
+	
+	var nakshatraNamesTamil = [
+		"அஸ்வினி", "பரணி", "கார்த்திகை", "ரோகிணி", "மிருகசீரிடம்", "திருவாதிரை", "புனர்பூசம்", "பூசம்", "ஆயில்யம்",
+		"மகம்", "பூரம்", "உத்திரம்", "ஹஸ்தம்", "சித்திரை", "சுவாதி", "விசாகம்", "அனுஷம்",
+		"கேட்டை", "மூலம்", "பூராடம்", "உத்திராடம்", "திருவோணம்", "அவிட்டம்", "சதயம்",
+		"பூரட்டாதி", "உத்திரட்டாதி", "ரேவதி"
+	];
+
 
     function calculateNakshatraPada(degree) {
         const degreesPerNakshatra = 13.33;
@@ -43,7 +52,7 @@
 
         const nakshatraIndex = Math.floor(degree / degreesPerNakshatra);
         const pada = Math.floor((degree / degreesPerPada) % 4) + 1;
-        const nakshatraName = nakshatraNames[nakshatraIndex % 27]; // Using modulo 27 to cycle through Nakshatra list
+        const nakshatraName = nakshatraNamesTamil[nakshatraIndex % 27]; // Using modulo 27 to cycle through Nakshatra list
 
         return { nakshatra: nakshatraName, pada: pada };
     }
@@ -68,7 +77,9 @@
         transitPlanets(jd, pp, false);
         var signIndices = chPlanets(pp);
         var planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu', 'Other'];
-        var zodiacType = document.getElementById('zodiacToggle').checked ? indianZodiac : westernZodiac;
+	    var planetsTamil = ['சூரியன்', 'சந்திரன்', 'செவ்வாய்', 'புதன்', 'வியாழன்', 'சுக்கிரன்', 'சனி', 'ராகு', 'கேது', 'பிற'];
+		
+        var zodiacType = document.getElementById('zodiacToggle').checked ? indianZodiacTamil : westernZodiac;
 
         var table = '<table><tr><th>Planet</th><th>Nakshatra Pada</th><th>Zodiac Sign & Degree</th><th>Longitude (degrees)</th></tr>';
         for (var i = 0; i < planets.length - 1; i++) {
@@ -76,7 +87,7 @@
             var degreeInSign = (pp[i] !== undefined && !isNaN(pp[i])) ? (pp[i] % 30).toFixed(2) : 'N/A';
             var zodiacSign = signIndices[i] ? zodiacType[signIndices[i] - 1] : 'N/A';
             var nakshatraPada = (pp[i] !== undefined && !isNaN(pp[i])) ? calculateNakshatraPada(pp[i]) : { nakshatra: 'N/A', pada: 'N/A' };
-            table += '<tr><td>' + planets[i] + '</td><td>' + nakshatraPada.nakshatra + ' ' + nakshatraPada.pada + '</td><td>' + zodiacSign + ' (' + degreeInSign + ')</td><td>' + longitude + '</td></tr>';
+            table += '<tr><td>' + planetsTamil[i] + '</td><td>' + nakshatraPada.nakshatra + ' ' + nakshatraPada.pada + '</td><td>' + zodiacSign + ' (' + degreeInSign + ')</td><td>' + longitude + '</td></tr>';
         }
         table += '</table>';
         document.getElementById('result').innerHTML = table;
@@ -126,6 +137,7 @@
         <label for="zodiacToggle">Use Indian Zodiac Names</label>
         <input type="checkbox" id="zodiacToggle" onclick="calculatePositions()" checked>
     </div>
+	
     <div class="form-control">
         <button onclick="calculatePositions()">Calculate Positions</button>
     </div>
