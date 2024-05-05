@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Planetary Positions</title>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; }
+    th { background-color: #f2f2f2; }
+</style>
+
+<script src="planterms2.js"></script>
+<script src="planets.js"></script>
+<script src="findchart.js"></script>
+
+<script>
+var westernZodiac = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+var indianZodiac = ['Mesha', 'Vrishabha', 'Mithuna', 'Karka', 'Simha', 'Kanya', 'Tula', 'Vrischika', 'Dhanu', 'Makara', 'Kumbha', 'Meena'];
+
+// Assuming the JavaScript functions date2jul, transitPlanets, and chPlanets are already defined.
+
+var nakshatraNames = [
+    "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra", "Punarvasu", "Pushya", "Ashlesha",
+    "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", 
+    "Jyeshta", "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha", 
+    "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
+];
+
+
+function calculateNakshatraPada(degree) {
+    const degreesPerNakshatra = 13.33;
+    const degreesPerPada = 3.33;
+
+    const nakshatraIndex = Math.floor(degree / degreesPerNakshatra);
+    const pada = Math.floor((degree / degreesPerPada) % 4) + 1;
+    const nakshatraName = nakshatraNames[nakshatraIndex % 27]; // Using modulo 27 to cycle through Nakshatra list
+
+    return { nakshatra: nakshatraName, pada: pada };
+}
+
+
+function calculatePositions() {
+    var year = document.getElementById('year').value;
+    var month = document.getElementById('month').value;
+    var day = document.getElementById('day').value;
+    var jd = date2jul(month, day, year);
+	//jd = date2jul(10, 27, 1966);
+	var hour = 6; // Indian Sunrise
+	var minutes = 0;
+	var zone_hours = 5.5; // India
+	
+	// adjust jd to get positions for Indian sunrise (without lat lon adjustments)
+	var time_of_day = hour + minutes / 60.0;
+    time_of_day += zone_hours;
+	
+    jd += time_of_day / 24.0;
+	jd -= 0.5;
+
+    var pp = new Array(10);
+    transitPlanets(jd, pp, false);
+    var signIndices = chPlanets(pp);
+    var planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu', 'Other'];
+    var zodiacType = document.getElementById('zodiacToggle').checked ? indianZodiac : westernZodiac;
+
+    var table = '<table><tr><th>Planet</th><th>Longitude (degrees)</th><th>Zodiac Sign</th><th>Degree Within Rashi</th><th>Nakshatra Pada</th></tr>';
+    for (var i = 0; i < planets.length-1; i++) {
+        var longitude = (pp[i] !== undefined && !isNaN(pp[i])) ? pp[i].toFixed(2) : 'N/A';
+        var degreeInSign = (pp[i] !== undefined && !isNaN(pp[i])) ? (pp[i] % 30).toFixed(2) : 'N/A';
+        var zodiacSign = signIndices[i] ? zodiacType[signIndices[i] - 1] : 'N/A';
+        var nakshatraPada = (pp[i] !== undefined && !isNaN(pp[i])) ? calculateNakshatraPada(pp[i]) : { nakshatra: 'N/A', pada: 'N/A' };
+        table += '<tr><td>' + planets[i] + '</td><td>' + longitude + '</td><td>' + zodiacSign + '</td><td>' + degreeInSign + '</td><td>' + nakshatraPada.nakshatra + ' ' + nakshatraPada.pada + '</td></tr>';
+    }
+    table += '</table>';
+    document.getElementById('result').innerHTML = table;
+}
+
+</script>
+</head>
+<body>
+<h1>Planetary Positions Calculator</h1>
+<label for="year">Year (1800-2200):</label>
+<select id="year">
+    <script>
+        for (let i = 1800; i <= 2200; i++) {
+            document.write('<option value="' + i + '">' + i + '</option>');
+        }
+    </script>
+</select>
+<label for="month">Month:</label>
+<select id="month">
+    <option value="1">January</option>
+    <option value="2">February</option>
+    <option value="3">March</option>
+    <option value="4">April</option>
+    <option value="5">May</option>
+    <option value="6">June</option>
+    <option value="7">July</option>
+    <option value="8">August</option>
+    <option value="9">September</option>
+    <option value="10">October</option>
+    <option value="11">November</option>
+    <option value="12">December</option>
+</select>
+<label for="day">Day:</label>
+<select id="day">
+    <script>
+        for (let i = 1; i <= 31; i++) {
+            document.write('<option value="' + i + '">' + i + '</option>');
+        }
+    </script>
+</select>
+<label for="zodiacToggle">Use Indian Zodiac Names</label>
+<input type="checkbox" id="zodiacToggle" onclick="calculatePositions()" checked>
+<button onclick="calculatePositions()">Calculate Positions</button>
+<div id="result"></div>
+</body>
+</html>
