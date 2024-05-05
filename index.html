@@ -68,41 +68,55 @@
         document.getElementById('day').value = day;
     }
 
-    function calculatePositions() {
-        var year = document.getElementById('year').value;
-        var month = document.getElementById('month').value;
-        var day = document.getElementById('day').value;
-        var jd = date2jul(month, day, year);
-        var hour = 6; // Indian Sunrise
-        var minutes = 0;
-        var zone_hours = 5.5; // India time zone offset
-        
-        // adjust jd to get positions for Indian sunrise
-        var time_of_day = hour + minutes / 60.0;
-        time_of_day += zone_hours;
-        
-        jd += time_of_day / 24.0;
-        jd -= 0.5;
-
-        var pp = new Array(10);
-        transitPlanets(jd, pp, false);
-        var signIndices = chPlanets(pp);
-        var planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu', 'Other'];
-	    var planetsTamil = ['சூரியன்', 'சந்திரன்', 'செவ்வாய்', 'புதன்', 'வியாழன்', 'சுக்கிரன்', 'சனி', 'ராகு', 'கேது', 'பிற'];
+	function calculatePositions() {
+		var year = document.getElementById('year').value;
+		var month = document.getElementById('month').value;
+		var day = document.getElementById('day').value;
+		var jd = date2jul(month, day, year);
+		var hour = 6; // Indian Sunrise
+		var minutes = 0;
+		var zone_hours = 5.5; // India time zone offset
 		
-        var zodiacType = document.getElementById('zodiacToggle').checked ? indianZodiacTamil : westernZodiac;
+		// adjust jd to get positions for Indian sunrise
+		var time_of_day = hour + minutes / 60.0;
+		time_of_day += zone_hours;
+		
+		jd += time_of_day / 24.0;
+		jd -= 0.5;
 
-        var table = '<table><tr><th>Planet</th><th>Nakshatra Pada</th><th>Zodiac Sign & Degree</th><th>Longitude (degrees)</th></tr>';
-        for (var i = 0; i < planets.length - 1; i++) {
-            var longitude = (pp[i] !== undefined && !isNaN(pp[i])) ? pp[i].toFixed(2) : 'N/A';
-            var degreeInSign = (pp[i] !== undefined && !isNaN(pp[i])) ? (pp[i] % 30).toFixed(2) : 'N/A';
-            var zodiacSign = signIndices[i] ? zodiacType[signIndices[i] - 1] : 'N/A';
-            var nakshatraPada = (pp[i] !== undefined && !isNaN(pp[i])) ? calculateNakshatraPada(pp[i]) : { nakshatra: 'N/A', pada: 'N/A' };
-            table += '<tr><td>' + planetsTamil[i] + '</td><td>' + nakshatraPada.nakshatra + ' ' + nakshatraPada.pada + '</td><td>' + zodiacSign + ' (' + degreeInSign + ')</td><td>' + longitude + '</td></tr>';
-        }
-        table += '</table>';
-        document.getElementById('result').innerHTML = table;
-    }
+		var pp = new Array(10);
+		transitPlanets(jd, pp, false);
+		var signIndices = chPlanets(pp);
+		var planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu', 'Other'];
+		var planetsTamil = ['சூரியன்', 'சந்திரன்', 'செவ்வாய்', 'புதன்', 'வியாழன்', 'சுக்கிரன்', 'சனி', 'ராகு', 'கேது', 'பிற'];
+		
+		var planetDetails = [];
+
+		for (var i = 0; i < planets.length - 1; i++) {
+			var longitude = (pp[i] !== undefined && !isNaN(pp[i])) ? pp[i].toFixed(2) : 'N/A';
+			var degreeInSign = (pp[i] !== undefined && !isNaN(pp[i])) ? (pp[i] % 30).toFixed(2) : 'N/A';
+			var zodiacSign = signIndices[i] ? indianZodiacTamil[signIndices[i] - 1] : 'N/A';
+			var nakshatraPada = (pp[i] !== undefined && !isNaN(pp[i])) ? calculateNakshatraPada(pp[i]) : { nakshatra: 'N/A', pada: 'N/A' };
+
+			planetDetails.push({
+				name: planetsTamil[i],
+				nakshatraPada: nakshatraPada.nakshatra + ' ' + nakshatraPada.pada,
+				zodiacSign: zodiacSign,
+				degree: degreeInSign,
+				longitude: parseFloat(longitude)
+			});
+		}
+
+		// Sort planets by longitude
+		planetDetails.sort((a, b) => a.longitude - b.longitude);
+
+		var table = '<table><tr><th>Planet</th><th>Nakshatra Pada</th><th>Zodiac Sign & Degree</th><th>Longitude (degrees)</th></tr>';
+		planetDetails.forEach((planet) => {
+			table += '<tr><td>' + planet.name + '</td><td>' + planet.nakshatraPada + '</td><td>' + planet.zodiacSign + ' (' + planet.degree + ')</td><td>' + planet.longitude + '</td></tr>';
+		});
+		table += '</table>';
+		document.getElementById('result').innerHTML = table;
+	}	
 	
     document.addEventListener('DOMContentLoaded', function() {
         setDateToday(); // Set date inputs to today's date when page loads
