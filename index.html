@@ -57,6 +57,17 @@
         return { nakshatra: nakshatraName, pada: pada };
     }
 
+    function setDateToday() {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = today.getMonth() + 1; // JavaScript months are 0-indexed
+        var day = today.getDate();
+        
+        document.getElementById('year').value = year;
+        document.getElementById('month').value = month;
+        document.getElementById('day').value = day;
+    }
+
     function calculatePositions() {
         var year = document.getElementById('year').value;
         var month = document.getElementById('month').value;
@@ -92,6 +103,12 @@
         table += '</table>';
         document.getElementById('result').innerHTML = table;
     }
+	
+    document.addEventListener('DOMContentLoaded', function() {
+        setDateToday(); // Set date inputs to today's date when page loads
+        calculatePositions(); // Calculate positions for the default date
+    });
+
 </script>
 </head>
 <body>
