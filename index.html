@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Planetary Positions of the day</title>
+<title>Planetary Positions of the day (as of 6AM India time) </title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
@@ -68,6 +68,55 @@
         document.getElementById('day').value = day;
     }
 
+	// Define house positions in a South Indian chart layout.
+	// This maps houses to their positions on a 4x4 grid's perimeter, starting from Aries.
+	var housePositions = [
+		{row: 0, col: 1},  // Aries
+		{row: 0, col: 2},  // Taurus
+		{row: 0, col: 3},  // Gemini
+		{row: 1, col: 3},  // Cancer
+		{row: 2, col: 3},  // Leo
+		{row: 3, col: 3},  // Virgo
+		{row: 3, col: 2},  // Libra
+		{row: 3, col: 1},  // Scorpio
+		{row: 3, col: 0},  // Sagittarius
+		{row: 2, col: 0},  // Capricorn
+		{row: 1, col: 0},  // Aquarius
+		{row: 0, col: 0}   // Pisces
+	];
+
+	function drawSouthChart(x, y, w, h, planetDetails) {
+		var mx = w / 4,  // width of each house
+			my = h / 4,  // height of each house
+			bw = w / 8;  // offset within each house for the planet text
+
+		var s = "<g>\n";
+		var planetCounts = new Array(12).fill(0);  // This will track the number of planets in each house
+
+		// Draw chart houses
+		housePositions.forEach((pos, index) => {
+			var xd = x + pos.col * mx,
+				yd = y + pos.row * my;
+			s += '<rect x="' + xd + '" y="' + yd + '" width="' + mx + '" height="' + my + '" style="fill:none;stroke:black;stroke-width:2"/>\n';
+		});
+
+		// Place planets in houses based on their longitude
+		planetDetails.forEach((planet) => {
+			var houseIndex = Math.floor((planet.longitude % 360) / 30); // Calculate house index from 0 to 11
+			var position = housePositions[houseIndex];
+			var count = planetCounts[houseIndex];
+			var cellX = x + position.col * mx;
+			var cellY = y + position.row * my + (count * 20);  // Adjust Y based on count of planets in the same house
+			var planetName = planet.name === "சந்திரன்" ? planet.name + "*" : planet.name; // Add asterisk for Moon
+
+			s += '<text x="' + (cellX + bw / 2) + '" y="' + (cellY + my / 2) + '" fill="black" font-size="14" font-family="monospace">' + planetName + '</text>\n';
+
+			planetCounts[houseIndex]++;  // Increment the count of planets in the current house
+		});
+
+		s += "</g>\n";
+		return s;
+	}
 	function calculatePositions() {
 		var year = document.getElementById('year').value;
 		var month = document.getElementById('month').value;
@@ -105,6 +154,10 @@
 				degree: degreeInSign,
 				longitude: parseFloat(longitude)
 			});
+			
+            var svgContent = drawSouthChart(0, 0, 400, 400, planetDetails);
+            document.getElementById('chartContainer').innerHTML = '<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" version="1.1">' + svgContent + '</svg>';
+
 		}
 
 		// Sort planets by longitude
@@ -118,6 +171,7 @@
 		document.getElementById('result').innerHTML = table;
 	}	
 	
+
     document.addEventListener('DOMContentLoaded', function() {
         setDateToday(); // Set date inputs to today's date when page loads
         calculatePositions(); // Calculate positions for the default date
@@ -126,7 +180,7 @@
 </script>
 </head>
 <body>
-    <h1>Planetary Positions for any day (6AM India) </h1>
+    <h1>Planetary Positions Calculator</h1>
     <div class="form-control">
         <label for="year">Year (1800-2200):</label>
         <select id="year">
@@ -172,6 +226,10 @@
     <div class="form-control">
         <button onclick="calculatePositions()">Calculate Positions</button>
     </div>
+    <div id="chartContainer" style="width: 400px; height: 400px;">
+        <!-- SVG chart will be inserted here -->
+    </div>
     <div id="result"></div>
+
 </body>
 </html>
