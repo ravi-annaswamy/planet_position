@@ -48,12 +48,11 @@
 
     function calculateNakshatraPada(degree) {
         const degreesPerNakshatra = 13.33;
-        const degreesPerPada = 3.33;
+        const degreesPerPada = 3.333;
 
         const nakshatraIndex = Math.floor(degree / degreesPerNakshatra);
-        const pada = Math.floor((degree / degreesPerPada) % 4) + 1;
+        const pada = Math.floor((degree / degreesPerPada)) % 4 + 1;
         const nakshatraName = nakshatraNamesTamil[nakshatraIndex % 27]; // Using modulo 27 to cycle through Nakshatra list
-
         return { nakshatra: nakshatraName, pada: pada };
     }
 
