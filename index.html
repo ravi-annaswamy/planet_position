@@ -57,16 +57,20 @@
         return { nakshatra: nakshatraName, pada: pada };
     }
 
-    function setDateToday() {
-        var today = new Date();
-        var year = today.getFullYear();
-        var month = today.getMonth() + 1; // JavaScript months are 0-indexed
-        var day = today.getDate();
-        
-        document.getElementById('year').value = year;
-        document.getElementById('month').value = month;
-        document.getElementById('day').value = day;
-    }
+	function setDateToday() {
+	    var today = new Date();
+	    var year = today.getFullYear();
+	    var month = today.getMonth() + 1; // JavaScript months are 0-indexed
+	    var day = today.getDate();
+	    var hour = today.getHours(); // Get the current hour
+	    var minute = today.getMinutes(); // Get the current minute
+	    
+	    document.getElementById('year').value = year;
+	    document.getElementById('month').value = month;
+	    document.getElementById('day').value = day;
+	    document.getElementById('hour').value = hour;
+	    document.getElementById('minute').value = minute;
+	}
 
 	// Define house positions in a South Indian chart layout.
 	// This maps houses to their positions on a 4x4 grid's perimeter, starting from Aries.
@@ -117,21 +121,22 @@
 		s += "</g>\n";
 		return s;
 	}
+	
 	function calculatePositions() {
 		var year = document.getElementById('year').value;
 		var month = document.getElementById('month').value;
 		var day = document.getElementById('day').value;
+		var hour = parseInt(document.getElementById('hour').value); // Get hour from form
+		var minutes = parseInt(document.getElementById('minute').value); // Get minute from form
 		var jd = date2jul(month, day, year);
-		var hour = 6; // Indian Sunrise
-		var minutes = 0;
 		var zone_hours = 5.5; // India time zone offset
-		
-		// adjust jd to get positions for Indian sunrise
+		    
+		// adjust jd to get positions for specified time
 		var time_of_day = hour + minutes / 60.0;
 		time_of_day += zone_hours;
-		
+		    
 		jd += time_of_day / 24.0;
-		jd -= 0.5;
+		jd -= 0.5;		
 
 		var pp = new Array(10);
 		transitPlanets(jd, pp, false);
@@ -221,6 +226,27 @@
 		</script>
         </select>
     </div>
+	<div class="form-control">
+	    <label for="hour">Hour (0-23):</label>
+	    <select id="hour">
+	        <script>
+	            for (let i = 0; i < 24; i++) {
+	                document.write('<option value="' + i + '">' + i + '</option>');
+	            }
+	        </script>
+	    </select>
+	</div>
+	<div class="form-control">
+	    <label for="minute">Minute (0-59):</label>
+	    <select id="minute">
+	        <script>
+	            for (let i = 0; i < 60; i++) {
+	                document.write('<option value="' + i + '">' + i + '</option>');
+	            }
+	        </script>
+	    </select>
+	</div>
+
     <div class="form-control">
         <button onclick="calculatePositions()">Calculate Positions</button>
     </div>
