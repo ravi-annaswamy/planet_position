@@ -146,8 +146,8 @@
 		var planetDetails = [];
 
 		for (var i = 0; i < planets.length - 1; i++) {
-			var longitude = (pp[i] !== undefined && !isNaN(pp[i])) ? pp[i].toFixed(0) : 'N/A';
-			var degreeInSign = (pp[i] !== undefined && !isNaN(pp[i])) ? (pp[i] % 30).toFixed(0) : 'N/A';
+			var longitude = (pp[i] !== undefined && !isNaN(pp[i])) ? pp[i].toFixed(1) : 'N/A';
+			var degreeInSign = (pp[i] !== undefined && !isNaN(pp[i])) ? (pp[i] % 30).toFixed(1) : 'N/A';
 			var zodiacSign = signIndices[i] ? indianZodiacTamil[signIndices[i] - 1] : 'N/A';
 			var nakshatraPada = (pp[i] !== undefined && !isNaN(pp[i])) ? calculateNakshatraPada(pp[i]) : { nakshatra: 'N/A', pada: 'N/A' };
 
