@@ -111,7 +111,7 @@
 			var count = planetCounts[houseIndex];
 			var cellX = x + position.col * mx;
 			var cellY = y + position.row * my + (count * 20);  // Adjust Y based on count of planets in the same house
-			var planetName = planet.name === "சந்திரன்" ? planet.name + "*" : planet.name; // Add asterisk for Moon
+			var planetName = planet.name
 
 			s += '<text x="' + (cellX + bw / 2) + '" y="' + (cellY + my / 2) + '" fill="black" font-size="14" font-family="monospace">' + planetName + '</text>\n';
 
