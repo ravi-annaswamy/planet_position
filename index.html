@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Planetary Positions of the day (India time)</title>
+    <img src="ganesha.jpg" alt="Ganesha" style="width:100px;height:100px;display:block;margin:auto;">
+	
+    <script src="js/app3.js"></script>
+    <script src="js/planets.js"></script>
+    <script src="js/planterms2.js"></script>
+	
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			padding: 18px;
+		}
+
+		.chart-container {
+			display: flex;
+			flex-wrap: wrap; /* Allows wrapping on smaller screens */
+			gap: 5px; /* Space between the charts */
+			justify-content: center; /* Center the charts horizontally */
+		}
+
+		.chart-box {
+			flex: 1 1 400px; /* Each chart takes up at least 400px and can grow */
+			min-width: 300px; /* Ensure charts are not too small on very small screens */
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for better distinction */
+			padding: 10px;
+			box-sizing: border-box;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			overflow-x: auto;
+			display: block;
+		}
+
+		th, td {
+			border: 1px solid #dddddd;
+			text-align: left;
+			padding: 8px;
+			font-size: 14px; /* Change this line to adjust the font size */
+		}
+
+		th {
+			background-color: #f2f2f2;
+		}
+
+		label, select, input[type="checkbox"], button {
+			display: block;
+			width: 100%;
+			margin-top: 5px;
+			margin-bottom: 5px;
+			padding: 10px;
+			font-size: 16px; /* Larger touch targets for mobile devices */
+		}
+
+		.form-control {
+			margin-bottom: 10px; /* Adds space between form controls */
+		}
+
+		/* Media query for small screens */
+		@media (max-width: 600px) {
+			th, td {
+				font-size: 12px; /* Reduce font size on small screens */
+				padding: 5px; /* Reduce padding on small screens */
+			}
+		}
+	</style>
+    <script>
+
+        function setDateToday() {
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = today.getMonth() + 1; // JavaScript months are 0-indexed
+            var day = today.getDate();
+            var hour = today.getHours(); // Get the current hour
+            var minute = today.getMinutes(); // Get the current minute
+            
+            document.getElementById('year').value = year;
+            document.getElementById('month').value = month;
+            document.getElementById('day').value = day;
+            document.getElementById('hour').value = hour;
+            document.getElementById('minute').value = minute;
+			
+        }
+
+		// Main driver function
+		function calculatePositions() {
+			var year = document.getElementById('year').value;
+			var month = document.getElementById('month').value;
+			var day = document.getElementById('day').value;
+			var hour = parseInt(document.getElementById('hour').value);
+			var minutes = parseInt(document.getElementById('minute').value);
+			// year = 1995; month = 10; day = 2; hour = 6; minutes = 15;
+			var city = document.getElementById("city").value;
+			var cityInfo = getCityInfo(city);
+			if (!cityInfo) {
+				alert("City information not available.");
+				return;
+			}
+
+			var timeData = extractTimeData(hour, minutes, cityInfo);
+			var dateData = calculateDateData(year, month, day, timeData.time);
+
+			var planetaryPositions = calculatePlanetaryPositions(dateData.t, timeData, cityInfo);
+			displayChart(planetaryPositions, year, month, day, hour, minutes);
+
+			var navamsaPositions = calculateNavamsaPositions(planetaryPositions);
+			displayNavamsaChart(navamsaPositions, dateData);
+
+			displayPlanetaryTable(planetaryPositions);
+		}
+
+		// Function to extract and adjust the time data
+		function extractTimeData(hour, minutes, cityInfo) {
+			var zoneHours = parseFloat(cityInfo.timezone.hours) + parseFloat(cityInfo.timezone.minutes / 60);
+			if (cityInfo.timezone.direction === 'E') {
+				zoneHours *= -1;
+			}
+			var time = parseFloat(hour) + parseFloat(minutes / 60) + zoneHours;
+			return { time: time, zoneHours: zoneHours };
+		}
+
+		// Function to calculate Julian date and time factor
+		function calculateDateData(year, month, day, time) {
+			var jd = date2jul(month, day, year) + 0.5;
+			var t = ((jd += time / 24.0) - J2000) / 36525.0;
+			return { jd: jd, t: t };
+		}
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setDateToday(); // Set date inputs to today's date when page loads
+            calculatePositions(); // Calculate positions for the default date
+        });
+    </script>
+</head>
+<body>
+    <h1>ஸ்ரீ கற்பக விநாயகர் - கிரக நிலை கணியன்(Central Tamilnadu)</h1>
+    <h3>தற்போதைய கிரக நிலை காட்டும். தேவையான தேதி நேரம் மாற்றலாம். (1800-2200)</h3>
+    <div class="form-control">
+        <label for="year">Year (1800-2200):</label>
+        <select id="year">
+            <script>
+                for (let i = 1800; i <= 2200; i++) {
+                    document.write('<option value="' + i + '">' + i + '</option>');
+                }
+            </script>
+        </select>
+    </div>
+    <div class="form-control">
+        <label for="month">Month:</label>
+        <select id="month">
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+    </div>
+    <div class="form-control">
+        <label for="day">Day:</label>
+        <select id="day">
+            <script>
+                for (let i = 1; i <= 31; i++) {
+                    document.write('<option value="' + i + '">' + i + '</option>');
+                }
+            </script>
+        </select>
+    </div>
+    <div class="form-control">
+        <label for="hour">Hour (0-23):</label>
+        <select id="hour">
+            <script>
+                for (let i = 0; i < 24; i++) {
+                    document.write('<option value="' + i + '">' + i + '</option>');
+                }
+            </script>
+        </select>
+    </div>
+    <div class="form-control">
+        <label for="minute">Minute (0-59):</label>
+        <select id="minute">
+            <script>
+                for (let i = 0; i < 60; i++) {
+                    document.write('<option value="' + i + '">' + i + '</option>');
+                }
+            </script>
+        </select>
+    </div>
+    <div class="form-control">
+        <label for="city">City:</label>
+        <select id="city">
+            <option value="Tiruchirappalli">Tiruchy</option>
+            <option value="Madurai">Madurai</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Bengaluru">Hyderabad</option>
+            <option value="Hyderabad">Bengaluru</option>
+            <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+            <option value="New Delhi">New Delhi</option>
+            <option value="New York, NY">New York</option>
+            <option value="Westlake, OH">Westlake</option>
+        </select>
+    </div>
+
+    <div class="form-control">
+        <button onclick="calculatePositions()">கணக்கிடுக</button>
+    </div>
+    <div class="chart-container">
+        <div id="chartContainer" class="chart-box">
+            <!-- SVG chart will be inserted here -->
+        </div>
+        <div id="navamsaChartContainer" class="chart-box">
+            <!-- SVG Navamsa chart will be inserted here -->
+        </div>
+    </div>
+    <div id="result"></div>
+</body>
+</html>
