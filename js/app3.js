@@ -290,11 +290,11 @@ function getCityInfo(cityName) {
 			planetaryPositions.sort((a, b) => a.houseNumber - b.houseNumber || a.longitude - b.longitude);
 
 //			var table = '<table><tr><th>House</th><th>Zodiac Sign</th><th>Planet</th><th>Nakshatra Pada</th><th>Nakshatra Lord</th></tr>';
-			var table = '<table><tr><th>House</th><th>Planet</th><th>Nakshatra Pada</th><th>Nakshatra Lord</th></tr>';
+			var table = '<table><tr><th>House</th><th>Planet</th><th>Nakshatra Pada</th><th>Nakshatra Lord</th><th>Degrees</th></tr>';
 			planetaryPositions.forEach((planet) => {
 //				table += '<tr><td>' + planet.houseNumber + '</td><td>' + planet.zodiacSign + '(' + planet.degree + ')</td><td>' + planet.name + '</td><td>' + planet.nakshatraPada + '</td><td>' + planet.nakshatraLord + '</td></tr>';
 
-				table += '<tr><td>' + planet.houseNumber + '</td><td>' + planet.name + '</td><td>' + planet.nakshatraPada + '</td><td>' + planet.nakshatraLord + '</td></tr>';
+				table += '<tr><td>' + planet.houseNumber + '</td><td>' + planet.name + '</td><td>' + planet.nakshatraPada + '</td><td>' + planet.nakshatraLord + '</td><td>' + Math.floor(planet.longitude) + '</td></tr>';
 			});
 			table += '</table>';
 			document.getElementById('result').innerHTML = table;
