@@ -167,6 +167,33 @@ function getCityInfo(cityName) {
             "longitude": { degrees: 80, minutes: 17, direction: 'E' },
             "timezone": { hours: 5, minutes: 30, direction: 'E' }
         },
+	{
+        "Vellore": {
+            "latitude": { degrees: 13, minutes: 5, direction: 'N' },
+            "longitude": { degrees: 80, minutes: 17, direction: 'E' },
+            "timezone": { hours: 5, minutes: 30, direction: 'E' }
+        },
+
+	{
+        "Salem": {
+            "latitude": { degrees: 13, minutes: 5, direction: 'N' },
+            "longitude": { degrees: 80, minutes: 17, direction: 'E' },
+            "timezone": { hours: 5, minutes: 30, direction: 'E' }
+        },
+
+	{
+        "Coimbatore": {
+            "latitude": { degrees: 13, minutes: 5, direction: 'N' },
+            "longitude": { degrees: 80, minutes: 17, direction: 'E' },
+            "timezone": { hours: 5, minutes: 30, direction: 'E' }
+        },
+        "Krishnagiri": {
+            "latitude": { degrees: 13, minutes: 5, direction: 'N' },
+            "longitude": { degrees: 80, minutes: 17, direction: 'E' },
+            "timezone": { hours: 5, minutes: 30, direction: 'E' }
+        },
+
+	    
         "Tiruchirappalli": {
             "latitude": { degrees: 10, minutes: 49, direction: 'N' },
             "longitude": { degrees: 78, minutes: 42, direction: 'E' },
