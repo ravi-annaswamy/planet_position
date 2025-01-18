@@ -169,34 +169,44 @@ function getCityInfo(cityName) {
         },
 	{
         "Vellore": {
-            "latitude": { degrees: 13, minutes: 5, direction: 'N' },
-            "longitude": { degrees: 80, minutes: 17, direction: 'E' },
+            "latitude": { degrees: 12, minutes: 56, direction: 'N' },
+            "longitude": { degrees: 79, minutes: 8, direction: 'E' },
             "timezone": { hours: 5, minutes: 30, direction: 'E' }
         },
 
 	{
         "Salem": {
-            "latitude": { degrees: 13, minutes: 5, direction: 'N' },
-            "longitude": { degrees: 80, minutes: 17, direction: 'E' },
+            "latitude": { degrees: 11, minutes: 40, direction: 'N' },
+            "longitude": { degrees: 78, minutes: 9, direction: 'E' },
             "timezone": { hours: 5, minutes: 30, direction: 'E' }
         },
 
 	{
         "Coimbatore": {
-            "latitude": { degrees: 13, minutes: 5, direction: 'N' },
-            "longitude": { degrees: 80, minutes: 17, direction: 'E' },
+            "latitude": { degrees: 11, minutes: 0, direction: 'N' },
+            "longitude": { degrees: 76, minutes: 57, direction: 'E' },
             "timezone": { hours: 5, minutes: 30, direction: 'E' }
         },
         "Krishnagiri": {
-            "latitude": { degrees: 13, minutes: 5, direction: 'N' },
-            "longitude": { degrees: 80, minutes: 17, direction: 'E' },
+            "latitude": { degrees: 12, minutes: 31, direction: 'N' },
+            "longitude": { degrees: 78, minutes: 12, direction: 'E' },
+            "timezone": { hours: 5, minutes: 30, direction: 'E' }
+        },
+        "Tirunelveli": {
+            "latitude": { degrees: 8, minutes: 44, direction: 'N' },
+            "longitude": { degrees: 77, minutes: 41, direction: 'E' },
+            "timezone": { hours: 5, minutes: 30, direction: 'E' }
+        },
+        "Kanyakumari": {
+            "latitude": { degrees: 8, minutes: 5, direction: 'N' },
+            "longitude": { degrees: 77, minutes: 32, direction: 'E' },
             "timezone": { hours: 5, minutes: 30, direction: 'E' }
         },
 
 	    
         "Tiruchirappalli": {
             "latitude": { degrees: 10, minutes: 49, direction: 'N' },
-            "longitude": { degrees: 78, minutes: 42, direction: 'E' },
+            "longitude": { degrees: 78, minutes: 40, direction: 'E' },
             "timezone": { hours: 5, minutes: 30, direction: 'E' }
         },
         "Madurai": {
